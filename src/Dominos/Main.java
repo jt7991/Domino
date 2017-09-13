@@ -18,6 +18,7 @@ import static javafx.geometry.Pos.CENTER;
 
 public class Main extends Application
 {
+    public Stage stage;
     public Scene welcomeScreen()
     {
         Label labelTitle = new Label("Dominos");
@@ -27,13 +28,13 @@ public class Main extends Application
         vboxWelcome.setAlignment(CENTER);
         vboxWelcome.setSpacing(10);
         vboxWelcome.getChildren().addAll(labelTitle, buttonStart);
-        Scene scene = new Scene(vboxWelcome, 800,800);
+        Scene scene = new Scene(vboxWelcome, 1200,800);
 
         buttonStart.setOnAction(new EventHandler<ActionEvent>()
         {
             @Override public void handle(ActionEvent e)
             {
-                GameCoordinator.startGame();
+                stage.setScene(GameCoordinator.startGame());
             }
         });
         return scene;
@@ -44,11 +45,12 @@ public class Main extends Application
         launch(args);
     }
     @Override
-    public void start(Stage primaryStage)
+    public void start(Stage stage)
     {
-        primaryStage.setTitle("Dominos");
-        primaryStage.show();
-        primaryStage.setScene(welcomeScreen());
+        this.stage = stage;
+        stage.setTitle("Dominos");
+        stage.show();
+        stage.setScene(welcomeScreen());
 
     }
 }

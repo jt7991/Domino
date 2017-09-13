@@ -12,9 +12,20 @@ public class DominoHand
        dominoList = new ArrayList<Domino>();
        dominoList.addAll(dominos);
    }
+   public void removeDomino(Domino domino)
+   {
+       dominoList.remove(domino);
 
-  public static void dominosToHand(List<Domino> dominos, DominoHand dominoHand)
+   }
+  public void dominosToHand(List<Domino> dominos)
   {
-      dominoHand.dominoList.addAll(dominos);
+      dominoList.addAll(dominos);
+  }
+
+  public static void flipDomino(Domino domino)
+  {
+      int swap = domino.digitA;
+      domino.digitA = domino.digitB;
+      domino.digitB = swap;
   }
 }

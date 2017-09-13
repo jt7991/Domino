@@ -29,7 +29,6 @@ public class Main extends Application
         vboxWelcome.setSpacing(10);
         vboxWelcome.getChildren().addAll(labelTitle, buttonStart);
         Scene scene = new Scene(vboxWelcome, 1200,800);
-
         buttonStart.setOnAction(new EventHandler<ActionEvent>()
         {
             @Override public void handle(ActionEvent e)

@@ -18,6 +18,22 @@ public class Player
             System.out.print("(" + dominoHand.dominoList.get(i).digitA + "," + dominoHand.dominoList.get(i).digitB + ") " );
         }
     }
+    public void placeDomino( Domino domino, Character direction)
+    {
+        Boolean legalPlay = GameBoard.checkLegalPlay(domino, direction);
+        if(legalPlay)
+        {
+            dominoHand.removeDomino(domino);
+            for (int i = 0; i < dominoHand.dominoList.size(); i++)
+            {
+                System.out.print("(" + dominoHand.dominoList.get(i).digitA + "," + dominoHand.dominoList.get(i).digitB + ") " );
+
+            }
+            System.out.println();
+            //GameBoard.playPiece(domino,direction);
+
+        }
+    }
     public Boolean playTurn()
     {
         if (dominoHand.dominoList.size() == 0) return true;

@@ -1,20 +1,22 @@
 package Dominos;
 
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
-import javafx.scene.image.*;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 
 import java.util.HashMap;
 import java.util.List;
 
-public class DominoHandGUI
+public class GameGUI
 {
     public static Domino selectedDomino;
     public static ImageView currentImage;
@@ -36,11 +38,48 @@ public class DominoHandGUI
         image.setStyle("-fx-effect: dropshadow(three-pass-box, rgba(255,0,0,1), 20, 0, 0, 0)");
     }
 
-    public HBox initializeDominoImages(Player currentPlayer)
+
+    public HBox dominoHandView(Player currentPlayer)
     {
-        List<Domino> dominoList = currentPlayer.dominoHand.dominoList;
-        ImageView[] dominoImage = new ImageView[dominoList.size()];
+
+        DominoHand dominoHand = currentPlayer.dominoHand;
+        List<Domino> dominoList = dominoHand.dominoList;
+        Button buttonFlipDomino = new Button("");
+        buttonFlipDomino.setPadding(Insets.EMPTY);
         HBox hboxDomino = new HBox(40);
+        buttonFlipDomino.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+                if (event.getCode() == KeyCode.SPACE)
+                {
+                    if(currentImage != null) flipDomino(currentImage, selectedDomino);
+                    System.out.println("(" + selectedDomino.digitA + "," + selectedDomino.digitB + ") " );
+                }
+                else if (event.getCode() == KeyCode.D)
+                {
+                    System.out.println("RIGHT");
+                    currentPlayer.placeDomino(selectedDomino, 'R');
+                    hboxDomino.getChildren().remove(currentImage);
+                    for (int i = 0; i < dominoHand.dominoList.size(); i++)
+                    {
+                        System.out.print("(" + dominoHand.dominoList.get(i).digitA + "," + dominoHand.dominoList.get(i).digitB + ") " );
+                    }
+                    System.out.println();
+                }
+                else if (event.getCode() == KeyCode.A)
+                {
+                    System.out.println("RIGHT");
+                    currentPlayer.placeDomino(selectedDomino, 'L');
+                    hboxDomino.getChildren().remove(currentImage);
+                    for (int i = 0; i < dominoHand.dominoList.size(); i++)
+                    {
+                        System.out.print("(" + dominoHand.dominoList.get(i).digitA + "," + dominoHand.dominoList.get(i).digitB + ") " );
+                    }
+                    System.out.println();
+                }
+            }
+        });
+        ImageView[] dominoImage = new ImageView[dominoList.size()];
         for (int i = 0; i < dominoList.size(); i++)
         {
             dominoImage[i] = new ImageView();
@@ -54,13 +93,21 @@ public class DominoHandGUI
             mapImageDomino.put(selectedImage, dominoList.get(i));
             dominoImage[i].setOnMouseClicked(new EventHandler<MouseEvent>(){
                 @Override
-                public void handle(MouseEvent event) {
+                public void handle(MouseEvent event)
+                {
                     selectedDomino = mapImageDomino.get(selectedImage);
                     System.out.println("(" +selectedDomino.digitA + "," + selectedDomino.digitB + ") " );
                     if(currentImage != null) unhighlight(currentImage);
                     currentImage = selectedImage;
                     System.out.println(selectedDomino);
                     highlight(currentImage);
+
+                    if (event.getButton() == MouseButton.SECONDARY)
+                    {
+                        if(currentImage != null) flipDomino(currentImage, selectedDomino);
+                        System.out.println("(" + selectedDomino.digitA + "," + selectedDomino.digitB + ") " );
+                    }
+
                 }
             });
             hboxDomino.getChildren().add(dominoImage[i]);
@@ -70,57 +117,27 @@ public class DominoHandGUI
         }
 
         hboxDomino.setAlignment(Pos.BOTTOM_CENTER);
+        hboxDomino.getChildren().add(buttonFlipDomino);
         return hboxDomino;
+
 
     }
-
-    public HBox dominoHandView(Player currentPlayer)
+    public Button viewBoneyard(Player currentPlayer)
     {
-
-        DominoHand dominoHand = currentPlayer.dominoHand;
-        List<Domino> dominoList = dominoHand.dominoList;
-
-
-        Button buttonFlipDomino = new Button("");
-        buttonFlipDomino.setPadding(Insets.EMPTY);
-        HBox hboxDomino = initializeDominoImages(currentPlayer);
-        buttonFlipDomino.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+        int totalBoneyardPieces = Boneyard.boneyardDominos.size();
+        Button buttonBoneyard = new Button("Boneyard: " + totalBoneyardPieces);
+        buttonBoneyard.setOnAction(new EventHandler<ActionEvent>()
+        {
             @Override
-            public void handle(KeyEvent event) {
-                if (event.getCode() == KeyCode.SPACE)
-                {
-                    if(currentImage != null) flipDomino(currentImage, selectedDomino);
-                    System.out.println("(" + selectedDomino.digitA + "," + selectedDomino.digitB + ") " );
-                }
-                else if (event.getCode() == KeyCode.RIGHT)
-                {
-                    System.out.println("RIGHT");
-                    currentPlayer.placeDomino(selectedDomino, 'R');
-                    hboxDomino.getChildren().remove(currentImage);
-                    for (int i = 0; i < dominoHand.dominoList.size(); i++)
-                    {
-                        System.out.print("(" + dominoHand.dominoList.get(i).digitA + "," + dominoHand.dominoList.get(i).digitB + ") " );
-                    }
-                    System.out.println();
-                }
-                else if (event.getCode() == KeyCode.LEFT)
-                {
-                    System.out.println("RIGHT");
-                    currentPlayer.placeDomino(selectedDomino, 'L');
-                    hboxDomino.getChildren().remove(currentImage);
-                    for (int i = 0; i < dominoHand.dominoList.size(); i++)
-                    {
-                        System.out.print("(" + dominoHand.dominoList.get(i).digitA + "," + dominoHand.dominoList.get(i).digitB + ") " );
-                    }
-                    System.out.println();
-                }
+            public void handle(ActionEvent e)
+            {
+
+                int numBoneyardPieces = currentPlayer.drawFromBoneyard();
+                buttonBoneyard.setText("Boneyard: " + numBoneyardPieces);
             }
+
         });
-        hboxDomino.getChildren().add(buttonFlipDomino);
-
-
-
-        return hboxDomino;
-
+        return buttonBoneyard;
     }
 }
+

@@ -34,6 +34,11 @@ public class Player
 
         }
     }
+    public int drawFromBoneyard()
+    {
+        dominoHand.dominosToHand(Boneyard.drawDominos(1));
+        return Boneyard.boneyardDominos.size();
+    }
     public Boolean playTurn()
     {
         if (dominoHand.dominoList.size() == 0) return true;

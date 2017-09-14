@@ -52,8 +52,9 @@ public class GameCoordinator
         }
 
         Boneyard.debugBoneyard();
-        DominoHandGUI dominoHandGUI = new DominoHandGUI();
-        HBox hbox = dominoHandGUI.dominoHandView(playerArray[currentTurn % GameCoordinator.NUMBER_OF_PLAYERS]);
+        GameGUI gameGUI = new GameGUI();
+        HBox hbox = gameGUI.dominoHandView(playerArray[currentTurn % GameCoordinator.NUMBER_OF_PLAYERS]);
+        hbox.getChildren().add(gameGUI.viewBoneyard(playerArray[currentTurn % GameCoordinator.NUMBER_OF_PLAYERS]));
         Scene scene = new Scene(hbox, 1400,800);
 
         return scene;

@@ -18,7 +18,7 @@ public class Player
             System.out.print("(" + dominoHand.dominoList.get(i).digitA + "," + dominoHand.dominoList.get(i).digitB + ") " );
         }
     }
-    public void placeDomino( Domino domino, Character direction)
+    public List<Domino> placeDomino( Domino domino, Character direction)
     {
         Boolean legalPlay = GameBoard.checkLegalPlay(domino, direction);
         if(legalPlay)
@@ -30,9 +30,10 @@ public class Player
 
             }
             System.out.println();
-            //GameBoard.playPiece(domino,direction);
+            return GameBoard.playPiece(domino,direction);
 
         }
+        else return GameBoard.gameBoard;
     }
     public int drawFromBoneyard()
     {

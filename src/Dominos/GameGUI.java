@@ -4,6 +4,9 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -12,6 +15,10 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+
 
 import java.util.HashMap;
 import java.util.List;
@@ -21,6 +28,8 @@ public class GameGUI
     public static Domino selectedDomino;
     public static ImageView currentImage;
     HashMap<ImageView, Domino> mapImageDomino = new HashMap<>();
+    List<Domino> gameBoard;
+    Domino firstDominoPlayed;
 
 
     private static void flipDomino(ImageView image, Domino domino)
@@ -38,7 +47,38 @@ public class GameGUI
         image.setStyle("-fx-effect: dropshadow(three-pass-box, rgba(255,0,0,1), 20, 0, 0, 0)");
     }
 
+    public  Pane drawGameBoard(List<Domino> gameBoard)
+    {
 
+        Pane root = new Pane();
+        int tempSize;
+        int realSize;
+        if (gameBoard == null)
+        {
+            tempSize =1;
+            realSize = 0;
+        }
+        else
+        {
+            tempSize =gameBoard.size();
+            realSize = tempSize;
+        }
+        ImageView[] dominoImage = new ImageView[tempSize];
+        for(int i = 0; i< realSize; i++)
+        {
+            dominoImage[i] = new ImageView();
+            Image image = new Image(gameBoard.get(i).imagePath);
+            dominoImage[i].setImage(image);
+
+            if (firstDominoPlayed == gameBoard.get(i))
+            {
+                dominoImage[i].setX(700);
+                dominoImage[i].setY(400);
+            }
+            root.getChildren().add(dominoImage[i]);
+        }
+        return root;
+    }
     public HBox dominoHandView(Player currentPlayer)
     {
 
@@ -47,7 +87,8 @@ public class GameGUI
         Button buttonFlipDomino = new Button("");
         buttonFlipDomino.setPadding(Insets.EMPTY);
         HBox hboxDomino = new HBox(40);
-        buttonFlipDomino.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+        buttonFlipDomino.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>()
+        {
             @Override
             public void handle(KeyEvent event) {
                 if (event.getCode() == KeyCode.SPACE)
@@ -58,7 +99,8 @@ public class GameGUI
                 else if (event.getCode() == KeyCode.D)
                 {
                     System.out.println("RIGHT");
-                    currentPlayer.placeDomino(selectedDomino, 'R');
+                    gameBoard = currentPlayer.placeDomino(selectedDomino, 'R');
+                    if (gameBoard.size() ==  1) firstDominoPlayed = gameBoard.get(0);
                     hboxDomino.getChildren().remove(currentImage);
                     for (int i = 0; i < dominoHand.dominoList.size(); i++)
                     {
@@ -68,8 +110,9 @@ public class GameGUI
                 }
                 else if (event.getCode() == KeyCode.A)
                 {
-                    System.out.println("RIGHT");
-                    currentPlayer.placeDomino(selectedDomino, 'L');
+                    System.out.println("LEFT");
+                    gameBoard = currentPlayer.placeDomino(selectedDomino, 'L');
+                    if (gameBoard.size() ==  1) firstDominoPlayed = gameBoard.get(0);
                     hboxDomino.getChildren().remove(currentImage);
                     for (int i = 0; i < dominoHand.dominoList.size(); i++)
                     {
@@ -139,5 +182,16 @@ public class GameGUI
         });
         return buttonBoneyard;
     }
+    public Scene showGame(Player currentPlayer)
+    {
+        Pane pane = drawGameBoard(gameBoard);
+        VBox vbox = new VBox();
+        HBox hbox = dominoHandView(currentPlayer);
+        hbox.getChildren().add(viewBoneyard(currentPlayer));
+        vbox.getChildren().addAll(hbox, pane);
+        Scene scene = new Scene(vbox, 1400,800);
+        return scene;
+    }
+
 }
 

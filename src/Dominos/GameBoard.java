@@ -5,8 +5,8 @@ import java.util.List;
 
 public class GameBoard
 {
-    public List<Domino> gameBoard = new ArrayList<>();
-    public  Boolean checkLegalPlay(Domino domino, Character direction)
+    public  static List<Domino> gameBoard = new ArrayList<>();
+    public  static Boolean checkLegalPlay(Domino domino, Character direction)
     {
         if (gameBoard.size() == 0) return true;
         else if (direction == 'R'&& ((gameBoard.get(gameBoard.size() - 1).digitB == domino.digitA) ||
@@ -19,5 +19,10 @@ public class GameBoard
 
         else return false;
     }
-    private List<Domino>
+    public static List<Domino> playPiece(Domino domino, Character direction)
+    {
+        if (direction == 'R') gameBoard.add(domino);
+        else if (direction == 'L') gameBoard.add(0, domino);
+        return gameBoard;
+    }
 }

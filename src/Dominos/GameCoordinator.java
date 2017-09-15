@@ -53,7 +53,7 @@ public class GameCoordinator
 
         Boneyard.debugBoneyard();
         GameGUI gameGUI = new GameGUI();
-        return gameGUI.showGame(playerArray[currentTurn % GameCoordinator.NUMBER_OF_PLAYERS]);
+        return gameGUI.showGame(playerArray);
 
 
     }

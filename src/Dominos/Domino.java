@@ -2,8 +2,11 @@ package Dominos;
 
 public class Domino {
     int digitA, digitB;
-    int flipped = 0;
+    int flipped;
     String imagePath;
+    Character direction;
+
+
 
 
 }
